@@ -6,6 +6,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "vm.h"
+#include "sysinfo.h"
 
 uint64
 sys_exit(void)
@@ -109,4 +110,19 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+uint64
+sys_sysinfo(void)
+{
+  uint64 addr;                    // ponteiro do USUÁRIO: o kernel não pode desreferenciá-lo
+  struct sysinfo si;
+  struct proc *p = myproc();
+
+  argaddr(0, &addr);              // 1º argumento, vindo de a0 no trapframe
+  si.totalmem = ktotalmem();
+  si.freemem  = kfreemem();
+  si.nproc    = knproc();
+  if(copyout(p->pagetable, p->sz, addr, (char*)&si, sizeof(si)) < 0)
+    return -1;                    // endereço inválido vira erro, não panic
+  return 0;
 }

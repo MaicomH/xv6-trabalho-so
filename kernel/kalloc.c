@@ -80,3 +80,26 @@ kalloc(void)
     memset((char *)r, 5, PGSIZE); // fill with junk
   return (void *)r;
 }
+
+// total de bytes que o alocador gerencia: do fim do kernel até PHYSTOP
+uint64
+ktotalmem(void)
+{
+  return PHYSTOP - PGROUNDUP((uint64)end);
+}
+
+// bytes livres agora: percorre a lista livre com o lock
+uint64
+kfreemem(void)
+{
+  struct run *r;
+  uint64 n = 0;
+
+  acquire(&kmem.lock);            // evita contar enquanto outra CPU faz kalloc/kfree
+  for (r = kmem.freelist; r; r = r->next)
+    n += PGSIZE;                  // cada nó = uma página livre
+  release(&kmem.lock);
+  return n;
+}
+uint64          ktotalmem(void);
+uint64          kfreemem(void);

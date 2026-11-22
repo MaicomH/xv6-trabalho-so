@@ -701,3 +701,19 @@ procdump(void)
     printk("\n");
   }
 }
+uint64
+knproc(void)
+{
+  struct proc *p;
+  uint64 n = 0;
+
+  for(p = proc; p < &proc[NPROC]; p++){
+    acquire(&p->lock);            // o campo state é protegido por p->lock
+    if(p->state != UNUSED)
+      n++;
+    release(&p->lock);
+  }
+  return n;
+}
+
+uint64          knproc(void);
