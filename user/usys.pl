@@ -44,3 +44,5 @@ entry("pause");
 entry("uptime");
 entry("sync");
 entry("sysinfo");
+entry("gethostname");
+entry("sethostname");

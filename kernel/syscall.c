@@ -103,7 +103,9 @@ extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
 extern uint64 sys_sync(void);
-extern uint64 sys_sysinfo(void);
+extern uint64 sys_sysinfo(void); // free
+extern uint64 sys_gethostname(void);// hostname
+extern uint64 sys_sethostname(void); // hostname
 
 
 // An array mapping syscall numbers from syscall.h
@@ -132,7 +134,9 @@ static uint64 (*syscalls[])(void) = {
   [SYS_mkdir]   = sys_mkdir,
   [SYS_close]   = sys_close,
   [SYS_sync]    = sys_sync,
-  [SYS_sysinfo]  = sys_sysinfo,
+  [SYS_sysinfo]  = sys_sysinfo, // free
+  [SYS_gethostname]  = sys_gethostname, // hostname
+  [SYS_sethostname]  = sys_sethostname, // hostname
   // clang-format on
 };
 

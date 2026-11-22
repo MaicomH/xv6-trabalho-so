@@ -21,4 +21,6 @@
 #define SYS_mkdir  20
 #define SYS_close  21
 #define SYS_sync   22
-#define SYS_sysinfo 23
+#define SYS_sysinfo 23 // free
+#define SYS_gethostname 24 // hostname
+#define SYS_sethostname 25 // hostname

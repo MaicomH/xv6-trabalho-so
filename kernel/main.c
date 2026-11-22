@@ -20,6 +20,7 @@ main()
     kvminit();          // create kernel page table
     kvminithart();      // turn on paging
     procinit();         // process table
+    hostnameinit();     // hostname lock
     trapinit();         // trap vectors
     trapinithart();     // install kernel trap vector
     plicinit();         // set up interrupt controller
@@ -29,7 +30,7 @@ main()
     fileinit();         // file table
     virtio_disk_init(); // emulated hard disk
     userinit();         // first user process
-
+    
     __atomic_store_n(&started, 1, __ATOMIC_RELEASE);
   } else {
     while (__atomic_load_n(&started, __ATOMIC_ACQUIRE) == 0)

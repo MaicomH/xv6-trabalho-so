@@ -89,7 +89,7 @@ sys_pause(void)
   release(&tickslock);
   return 0;
 }
-
+//seção do free
 uint64
 sys_kill(void)
 {
@@ -126,3 +126,58 @@ sys_sysinfo(void)
     return -1;                    // endereço inválido vira erro, não panic
   return 0;
 }
+//fim da seção do free
+
+//seção do hostname
+
+#define HOSTNAME_MAX 64               // inclui o '\0': nome com no máximo 63 caracteres
+
+static char hostname[HOSTNAME_MAX] = "xv6";
+static struct spinlock hostname_lock;
+
+void
+hostnameinit(void)
+{
+  initlock(&hostname_lock, "hostname");
+}
+
+uint64
+sys_gethostname(void)
+{
+  uint64 addr;                        // buffer do USUÁRIO
+  int n, len;
+  char tmp[HOSTNAME_MAX];             // cópia local, na pilha do kernel
+  struct proc *p = myproc();
+
+  argaddr(0, &addr);
+  argint(1, &n);                      // tamanho do buffer do usuário
+
+  acquire(&hostname_lock);
+  len = strlen(hostname);
+  memmove(tmp, hostname, len + 1);    // copia o '\0' também
+  release(&hostname_lock);            // solta o lock ANTES do copyout
+
+  if(n < len + 1)                     // buffer pequeno demais
+    return -1;
+  if(copyout(p->pagetable, p->sz, addr, tmp, len + 1) < 0)
+    return -1;                        // endereço inválido
+  return len;
+}
+
+uint64
+sys_sethostname(void)
+{
+  char buf[HOSTNAME_MAX];
+  int len;
+
+  len = argstr(0, buf, HOSTNAME_MAX); // -1 se o ponteiro for inválido ou a string não caber
+  if(len <= 0)                        // erro ou string vazia
+    return -1;
+
+  acquire(&hostname_lock);
+  memmove(hostname, buf, len + 1);    // só altera o estado compartilhado com o lock
+  release(&hostname_lock);
+  return 0;
+}
+
+//fim da seção do hostname
