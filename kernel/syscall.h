@@ -24,3 +24,4 @@
 #define SYS_sysinfo 23 // free
 #define SYS_gethostname 24 // hostname
 #define SYS_sethostname 25 // hostname
+#define SYS_getprocs 26    // ps

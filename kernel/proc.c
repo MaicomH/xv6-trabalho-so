@@ -5,6 +5,8 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "procinfo.h"
+
 
 struct cpu cpus[NCPU];
 
@@ -717,3 +719,25 @@ knproc(void)
 }
 
 uint64          knproc(void);
+
+int
+kprocinfo(int i, struct procinfo *out)
+{
+  struct proc *p = &proc[i];
+  int usado = 0;
+
+  acquire(&wait_lock);              // protege p->parent; vem ANTES de p->lock
+  acquire(&p->lock);                // protege state, pid, sz, name
+  if(p->state != UNUSED){
+    usado = 1;
+    out->pid = p->pid;
+    out->ppid = p->parent ? p->parent->pid : 0;
+    out->state = p->state;
+    out->sz = p->sz;
+    safestrcpy(out->name, p->name, sizeof(out->name));
+  }
+  release(&p->lock);
+  release(&wait_lock);
+  return usado;
+}
+

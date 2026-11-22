@@ -2,7 +2,9 @@
 
 struct stat;
 struct sysinfo;
+struct procinfo;
 
+int getprocs(struct procinfo *, int);
 
 // system calls
 int uptime(void);

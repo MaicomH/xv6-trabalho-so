@@ -106,7 +106,7 @@ extern uint64 sys_sync(void);
 extern uint64 sys_sysinfo(void); // free
 extern uint64 sys_gethostname(void);// hostname
 extern uint64 sys_sethostname(void); // hostname
-
+extern uint64 sys_getprocs(void);  // ps
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -137,6 +137,7 @@ static uint64 (*syscalls[])(void) = {
   [SYS_sysinfo]  = sys_sysinfo, // free
   [SYS_gethostname]  = sys_gethostname, // hostname
   [SYS_sethostname]  = sys_sethostname, // hostname
+  [SYS_getprocs]  = sys_getprocs, // ps
   // clang-format on
 };
 

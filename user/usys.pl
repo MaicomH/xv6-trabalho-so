@@ -46,3 +46,4 @@ entry("sync");
 entry("sysinfo");
 entry("gethostname");
 entry("sethostname");
+entry("getprocs");

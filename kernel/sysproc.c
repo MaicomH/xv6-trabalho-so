@@ -7,6 +7,7 @@
 #include "proc.h"
 #include "vm.h"
 #include "sysinfo.h"
+#include "procinfo.h"
 
 uint64
 sys_exit(void)
@@ -181,3 +182,31 @@ sys_sethostname(void)
 }
 
 //fim da seção do hostname
+
+//seção ps
+
+uint64
+sys_getprocs(void)
+{
+  uint64 addr;                      // vetor do USUÁRIO
+  int max, n = 0, i;
+  struct procinfo pi;               // uma entrada por vez, na pilha do kernel
+  struct proc *p = myproc();
+
+  argaddr(0, &addr);
+  argint(1, &max);
+  if(max <= 0)
+    return -1;
+
+  for(i = 0; i < NPROC && n < max; i++){
+    if(kprocinfo(i, &pi) == 0)      // slot UNUSED: pula
+      continue;
+    // copyout FORA de qualquer lock
+    if(copyout(p->pagetable, p->sz, addr + n * sizeof(pi), (char*)&pi, sizeof(pi)) < 0)
+      return -1;
+    n++;
+  }
+  return n;
+}
+
+// fim da seção ps
