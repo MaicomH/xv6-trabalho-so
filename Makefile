@@ -156,6 +156,8 @@ UPROGS=\
 	$U/_hostnametest\
 	$U/_ps\
 	$U/_pstest\
+	$U/_strace\
+	$U/_stracetest\
 	$U/_free
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)

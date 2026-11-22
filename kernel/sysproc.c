@@ -210,3 +210,18 @@ sys_getprocs(void)
 }
 
 // fim da seção ps
+
+// seção strace
+uint64
+sys_trace(void)
+{
+  int mask;
+
+  argint(0, &mask);
+  if(mask < 0)                    // bit 31 ligado vira negativo: recusado
+    return -1;
+  myproc()->tracemask = mask;
+  return 0;
+}
+
+// fim seção strace

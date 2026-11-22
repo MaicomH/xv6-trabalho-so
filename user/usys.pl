@@ -47,3 +47,4 @@ entry("sysinfo");
 entry("gethostname");
 entry("sethostname");
 entry("getprocs");
+entry("trace");

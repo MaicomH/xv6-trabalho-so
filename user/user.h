@@ -33,7 +33,7 @@ int uptime(void);
 int sync(void); // free
 int gethostname(char*, int); // hostname
 int sethostname(const char*); // hostname
-
+int trace(int);  // strace
 
 // ulib.c
 int stat(const char *, struct stat *);
